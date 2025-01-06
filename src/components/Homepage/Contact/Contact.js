@@ -60,10 +60,10 @@ const Contact = () => {
       };
   
       emailjs.send(
-        'service_ue4vcrr',
-        'template_dwxmzzn',
+        process.env.REACT_APP_EMAILJS_SERVICE_ID,
+        process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
         templateParams,
-        'NNg7m06LZ8oPDriXJ'
+        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
       )
       .then((result) => {
         setFormData({ name: '', email: '', message: '' });
