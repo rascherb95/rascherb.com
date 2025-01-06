@@ -1,0 +1,94 @@
+.contact-section {
+    min-height: 100vh;
+    padding: 60px 20px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .contact-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .contact-form {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .form-group label {
+    font-size: 16px;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+  }
+  
+  .form-group input.error,
+  .form-group textarea.error {
+    border-color: #dc2626;
+  }
+  
+  .error-message {
+    color: #dc2626;
+    font-size: 14px;
+  }
+  
+  .submit-button {
+    padding: 10px 20px;
+    background-color: #355E3B;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .submit-button:hover {
+    opacity: 0.9;
+  }
+  
+  .status-message {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .status-message.success {
+    color: #16a34a;
+  }
+  
+  .status-message.error {
+    color: #dc2626;
+  }
+  
+  /* Media queries for responsive design */
+  @media (max-width: 768px) {
+    .contact-title {
+      font-size: 28px;
+    }
+    
+    .contact-form {
+      padding: 0 10px;
+    }
+  }

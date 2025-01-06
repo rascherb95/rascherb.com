@@ -1,0 +1,108 @@
+/* Base container styles */
+.profit-loss-container {
+    max-width: 56rem;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Header section styles */
+.header-section {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.header-title {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.header-subtitle {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-top: 0.25rem;
+}
+
+/* Table styles */
+.table-container {
+    overflow-x: auto;
+}
+
+.financial-table {
+    min-width: 100%;
+}
+
+.table-header {
+    background-color: #f9fafb;
+}
+
+.table-header-cell {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table-header-cell-amount {
+    padding: 0.75rem 1.5rem;
+    text-align: right;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table-body {
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Financial row styles */
+.financial-row-base {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+}
+
+.financial-row-header {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #1f2937;
+    background-color: #f9fafb;
+}
+
+.financial-row-summary {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1f2937;
+    border-top: 1px solid #e5e7eb;
+}
+
+.financial-row-data {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+/* Indentation levels */
+.indent-level-0 {
+    padding-left: 1.5rem;
+}
+
+.indent-level-1 {
+    padding-left: 3rem;
+}
+
+/* Amount column alignment */
+.amount-cell {
+    text-align: right;
+}
