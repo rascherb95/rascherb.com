@@ -8,11 +8,23 @@ const Home = ({ profileImage }) => {
         {/* Text Content Column */}
         <div className="content-column">
           <h1>Who am I?</h1>
-          <p className="subtitle">Rob Scherb</p>
+          <p className="subtitle">
+            Rob Scherb | <a 
+              href="https://www.linkedin.com/in/rascherb/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{ 
+                color: '#0077b5', // LinkedIn blue color
+                textDecoration: 'none'
+              }}
+            >
+              LinkedIn
+            </a>
+          </p>
           <div className="description">
             <p>
               I'm a CPA that specializes in accounting due diligence in the software industry.
-              This website is for hosting projects that I've worked on.
+              This is my personal website and mainly hosts projects I've worked on.
             </p>
           </div>
           <a href="#projects" className="cta-button">

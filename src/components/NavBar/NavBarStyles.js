@@ -1,4 +1,4 @@
-// src/components/navbarStyles.js
+// src/components/NavBarStyles.js
 export const NavBarStyles = {
   nav: {
   padding: '20px',

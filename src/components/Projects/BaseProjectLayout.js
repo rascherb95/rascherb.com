@@ -3,14 +3,9 @@ import ProjectNavBar from './ProjectNavBar';
 
 const BaseProjectLayout = ({ title, children }) => {
   return (
-    <div>
+    <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
       <ProjectNavBar projectTitle={title} />
-      <div style={{
-        padding: '40px',  // Increased padding
-        marginTop: '60px', // Adjusted to match the NavBar height
-        maxWidth: '1200px', // Added max-width for content containment
-        margin: '60px auto 0', // Centered content with top margin
-      }}>
+      <div style={{ paddingTop: '80px' }}>
         {children}
       </div>
     </div>
