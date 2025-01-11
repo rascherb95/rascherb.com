@@ -1,0 +1,82 @@
+.profit-loss-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.company-name {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.report-title {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.report-period {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.financial-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.financial-table td {
+    padding: 4px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.financial-table td:last-child {
+    text-align: right;
+}
+
+/* Add styles for error and loading states */
+.error-message {
+    color: #dc2626;
+    padding: 1rem;
+}
+
+.loading-message {
+    padding: 1rem;
+}
+
+/* Header and Total Row Styles */
+.section-header {
+    font-weight: 600;
+}
+
+.total-row {
+    font-weight: 600;
+    border-bottom: 1px solid #000;
+}
+
+.major-total-row {
+    font-weight: 700;
+    border-top: 1px solid #000;
+    border-bottom: double 3px #000;
+}
+
+.major-total-row td {
+    border-bottom: none;  /* Override the default border */
+}
+
+/* Indentation Levels */
+.indent-1 { padding-left: 20px !important; }
+.indent-2 { padding-left: 40px !important; }
+.indent-3 { padding-left: 60px !important; }
+
+/* Amount Formatting */
+.amount-cell {
+    font-variant-numeric: tabular-nums;
+}
+
+.major-total-row .amount-cell::before {
+    content: '$';
+}

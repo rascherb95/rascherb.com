@@ -1,7 +1,7 @@
 import React from 'react';
 import BaseProjectLayout from '../BaseProjectLayout';
 import { SAMPLE_DATA } from './FinStmtDisplays/SampleData'
-import FinancialStructure from './FinStmtDisplays/FinancialStructure'
+import FinancialStructure from './FinStmtDisplays/ProfitAndLossDisplay'
 
 const BetterBooks = () => {
   return (
