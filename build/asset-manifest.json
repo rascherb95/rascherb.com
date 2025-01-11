@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.1b25b0f8.css",
-    "main.js": "/static/js/main.f3385884.js",
+    "main.css": "/static/css/main.321315a7.css",
+    "main.js": "/static/js/main.bde8d5ea.js",
     "static/js/488.21f515ae.chunk.js": "/static/js/488.21f515ae.chunk.js",
     "static/media/ChryslerWithEagle.avif": "/static/media/ChryslerWithEagle.6481df4c590e8a4d74ac.avif",
     "index.html": "/index.html",
-    "main.1b25b0f8.css.map": "/static/css/main.1b25b0f8.css.map",
-    "main.f3385884.js.map": "/static/js/main.f3385884.js.map",
+    "main.321315a7.css.map": "/static/css/main.321315a7.css.map",
+    "main.bde8d5ea.js.map": "/static/js/main.bde8d5ea.js.map",
     "488.21f515ae.chunk.js.map": "/static/js/488.21f515ae.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1b25b0f8.css",
-    "static/js/main.f3385884.js"
+    "static/css/main.321315a7.css",
+    "static/js/main.bde8d5ea.js"
   ]
 }
