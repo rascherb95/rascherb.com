@@ -3,6 +3,7 @@
     background-color: #f3f4f6;
     padding: 1rem;
     border-right: 1px solid #e5e7eb;
+    display: flex;
   }
   
   .nav-menu {
