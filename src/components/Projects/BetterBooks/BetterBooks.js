@@ -1,6 +1,7 @@
 import React from 'react';
 import BaseProjectLayout from '../BaseProjectLayout';
-import ProfitLossDisplay from './FinStmtDisplays/ProfitLossDisplay';
+import { SAMPLE_DATA } from './FinStmtDisplays/SampleData'
+import FinancialStructure from './FinStmtDisplays/FinancialStructure'
 
 const BetterBooks = () => {
   return (
@@ -15,7 +16,7 @@ const BetterBooks = () => {
 }}>
     Check back frequently for new features!
 </p>
-      <ProfitLossDisplay></ProfitLossDisplay>
+      <FinancialStructure sampleData={SAMPLE_DATA}></FinancialStructure>
 
     </BaseProjectLayout>
   );
