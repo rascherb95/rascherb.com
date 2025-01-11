@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProfitLossHeader from './ProfitLossHeader';
 import ProfitLossRow from './ProfitLossRow';
-import { parseLineItem, getMasterStructure } from '../utils/ProfitLossUtils';
+import { parseLineItem, getMasterStructure } from '../../utils/ProfitLossUtils';
 import './ProfitAndLoss.css';
 
 const ProfitAndLoss = ({ sampleData }) => {

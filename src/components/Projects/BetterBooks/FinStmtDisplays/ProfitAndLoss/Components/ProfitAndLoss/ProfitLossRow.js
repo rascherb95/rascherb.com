@@ -1,5 +1,5 @@
 import React from 'react';
-import { MAJOR_TOTAL_ROWS, formatCurrency } from '../utils/ProfitLossUtils';
+import { MAJOR_TOTAL_ROWS, formatCurrency } from '../../utils/ProfitLossUtils';
 
 const ProfitLossRow = ({ row }) => {
   const isTotal = row.Account.toLowerCase().includes('total');

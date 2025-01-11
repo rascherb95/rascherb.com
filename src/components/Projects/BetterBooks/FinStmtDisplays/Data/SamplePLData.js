@@ -1,5 +1,4 @@
-// src/components/Projects/BetterBooks/SampleData.js
-export const SAMPLE_DATA = {
+export const SAMPLE_PL_DATA = {
   "Header": {
    "Time": "2025-01-10T18:15:22-08:00",
    "ReportName": "ProfitAndLoss",
