@@ -1,6 +1,6 @@
 // src/components/NavBar.js
 import React from 'react';
-import { NavBarStyles } from './NavBarStyles';
+import { NavBarStyles } from './NavHeaderStyles';
 
 
 const NavBar = () => {

@@ -1,7 +1,7 @@
 // src/components/ProjectNavBar.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { NavBarStyles } from '../NavBar/NavBarStyles';
+import { NavBarStyles } from '../NavHeader/NavHeaderStyles';
 
 const ProjectNavBar = ({ projectTitle }) => {
   const navigate = useNavigate();

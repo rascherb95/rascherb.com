@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import profileImage from './assets/ChryslerWithEagle.avif';
-import NavBar from './components/NavBar/NavBar';
+import NavBar from './components/NavHeader/NavHeader';
 import Home from './components/Homepage/Homepage/Home';
 import Projects from './components/Homepage/ProjectCards/Projects';
 import Contact from './components/Homepage/Contact/Contact';
