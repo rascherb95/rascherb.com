@@ -1,11 +1,11 @@
-// Constants for identifying special rows
+// Constants and helper functions stay the same
 export const MAJOR_TOTAL_ROWS = [
-    'total income',
-    'total cost of goods sold',
-    'gross profit',
-    'total expenses',
-    'net operating income',
-    'net income'
+    'Total Income',
+    'Total Cost of Goods Sold',
+    'Gross Profit',
+    'Total Expenses',
+    'Net Operating Income',
+    'Net Income'
 ];
 
 // Format currency values consistently
@@ -21,97 +21,61 @@ export const formatCurrency = (amount) => {
     }).format(amount);
 };
 
-// Calculate total for a section's transactions
-const calculateSectionTransactionsTotal = (rows) => {
-    if (!Array.isArray(rows)) return 0;
-    
-    return rows.reduce((total, row) => {
-        if (row.type === 'Data' && row.ColData) {
-            const amount = parseFloat(row.ColData[6]?.value || '0');
-            return total + amount;
-        }
-        if (row.Rows?.Row) {
-            return total + calculateSectionTransactionsTotal(row.Rows.Row);
-        }
-        return total;
-    }, 0);
-};
+// Process section and build transaction hierarchy
+const processSection = (section, parentTitle = null) => {
+    if (!section) return [];
 
-// Update totals for a section and its totals row
-const updateSectionTotals = (section) => {
-    if (!section?.Rows?.Row) return;
-
-    // Calculate total from actual transactions
-    const total = calculateSectionTransactionsTotal(section.Rows.Row);
-
-    // Update the section header amount
-    if (section.ColData?.[1]) {
-        section.ColData[1].value = formatCurrency(total);
-    }
-
-    // Find and update the total row if it exists
-    const totalRow = section.Rows.Row.find(row => 
-        row.type === 'Total' && 
-        row.ColData?.[0]?.value?.toLowerCase().startsWith('total for')
-    );
-    if (totalRow?.ColData?.[1]) {
-        totalRow.ColData[1].value = formatCurrency(total);
-    }
-
-    return total;
-};
-
-// Process a section recursively
-export const processSection = (section, path = [], parentSection = null) => {
     const transactions = [];
-    
-    if (!section) return transactions;
+    const sectionTitle = section.Header?.ColData?.[0]?.value || '';
 
-    // Store reference to parent for total calculations
-    section.parent = parentSection;
-
-    // Process Data rows
+    // Process direct transaction data
     if (section.type === 'Data' && section.ColData) {
-        const amount = parseFloat(section.ColData[6]?.value || '0');
         transactions.push({
-            path,
-            date: section.ColData[0]?.value,
+            date: section.ColData[0]?.value || '',
             type: section.ColData[1]?.value || '',
-            number: section.ColData[2]?.value,
-            name: section.ColData[3]?.value,
-            memo: section.ColData[4]?.value,
-            split: section.ColData[5]?.value,
-            amount,
-            balance: parseFloat(section.ColData[7]?.value || '0')
+            docNumber: section.ColData[2]?.value || '',
+            name: section.ColData[3]?.value || '',
+            memo: section.ColData[4]?.value || '',
+            account: section.ColData[5]?.value || '',
+            amount: parseFloat(section.ColData[6]?.value || '0'),
+            accountTitle: parentTitle || 'Other',
+            classification: getTopLevelParent(section)
         });
     }
 
     // Process nested sections
     if (section.Rows?.Row) {
-        // Get section name for path
-        const sectionName = section.ColData?.[0]?.value || section.Header?.ColData?.[0]?.value || '';
-        const newPath = sectionName ? [...path, sectionName] : path;
-        
-        // Process each row
-        section.Rows.Row.forEach(row => {
-            const subTransactions = processSection(row, newPath, section);
-            transactions.push(...subTransactions);
+        const rows = Array.isArray(section.Rows.Row) ? section.Rows.Row : [section.Rows.Row];
+        rows.forEach(row => {
+            const childTransactions = processSection(row, sectionTitle || parentTitle);
+            transactions.push(...childTransactions);
         });
-
-        // After processing all rows, update section totals
-        if (section.type === 'Header') {
-            updateSectionTotals(section);
-        }
     }
 
     return transactions;
 };
 
-// Process the entire P&L detail data
+// Get top-level classification (Income, COGS, Expenses)
+const getTopLevelParent = (section) => {
+    let current = section;
+    let lastTitle = '';
+
+    while (current) {
+        const title = current.Header?.ColData?.[0]?.value || '';
+        if (['Income', 'Cost of Goods Sold', 'Expenses'].includes(title)) {
+            return title;
+        }
+        if (title) lastTitle = title;
+        current = current.parent;
+    }
+
+    return lastTitle;
+};
+
+// Main processing function
 export const processPLDetail = (data) => {
     if (!data) {
         return {
-            transactions: [],
             groupedTransactions: {},
             categoryTotals: {},
             processed: false
@@ -119,22 +83,49 @@ export const processPLDetail = (data) => {
     }
 
     try {
-        // Process sections and collect transactions
-        const transactions = [];
-        
-        if (data.Rows?.Row) {
-            data.Rows.Row.forEach(section => {
-                const sectionTransactions = processSection(section, [], data);
-                transactions.push(...sectionTransactions);
-            });
-        }
+        // Process all transactions
+        const allTransactions = processSection(data);
 
-        // Group transactions and calculate totals
-        const groupedTransactions = groupTransactions(transactions);
-        const categoryTotals = calculateCategoryTotals(groupedTransactions);
+        // Group transactions by account title and classification
+        const groupedTransactions = allTransactions.reduce((acc, trans) => {
+            const key = `${trans.classification}:${trans.accountTitle}`;
+            if (!acc[key]) {
+                acc[key] = [];
+            }
+            acc[key].push(trans);
+            return acc;
+        }, {});
+
+        // Calculate totals for each category
+        const categoryTotals = {};
+        Object.entries(groupedTransactions).forEach(([key, transactions]) => {
+            categoryTotals[key] = transactions.reduce((sum, t) => sum + t.amount, 0);
+        });
+
+        // Calculate major totals
+        const incomeTotal = Object.entries(groupedTransactions)
+            .filter(([key]) => key.startsWith('Income:'))
+            .reduce((sum, [_, trans]) => 
+                sum + trans.reduce((s, t) => s + t.amount, 0), 0);
+
+        const cogsTotal = Object.entries(groupedTransactions)
+            .filter(([key]) => key.startsWith('Cost of Goods Sold:'))
+            .reduce((sum, [_, trans]) => 
+                sum + trans.reduce((s, t) => s + t.amount, 0), 0);
+
+        const expensesTotal = Object.entries(groupedTransactions)
+            .filter(([key]) => key.startsWith('Expenses:'))
+            .reduce((sum, [_, trans]) => 
+                sum + trans.reduce((s, t) => s + t.amount, 0), 0);
+
+        // Add major totals
+        categoryTotals['Total Income'] = incomeTotal;
+        categoryTotals['Total Cost of Goods Sold'] = cogsTotal;
+        categoryTotals['Gross Profit'] = incomeTotal - cogsTotal;
+        categoryTotals['Total Expenses'] = expensesTotal;
+        categoryTotals['Net Income'] = incomeTotal - cogsTotal - expensesTotal;
 
         return {
-            transactions,
             groupedTransactions,
             categoryTotals,
             processed: true
@@ -142,7 +133,6 @@ export const processPLDetail = (data) => {
     } catch (error) {
         console.error('Error processing P&L detail:', error);
         return {
-            transactions: [],
             groupedTransactions: {},
             categoryTotals: {},
             processed: false,
@@ -151,101 +141,14 @@ export const processPLDetail = (data) => {
     }
 };
 
-// Group transactions by category and type
-export const groupTransactions = (transactions) => {
-    if (!Array.isArray(transactions)) return {};
-    
-    return transactions.reduce((acc, trans) => {
-        if (!trans?.path?.length) return acc;
-        const category = trans.path[trans.path.length - 1];
-        const type = (trans.type || '').toLowerCase();
-        const key = `${category}:${type}`;
-        
-        if (!acc[key]) {
-            acc[key] = [];
-        }
-        acc[key].push(trans);
-        return acc;
-    }, {});
-};
-
-// Calculate category totals
-export const calculateCategoryTotals = (groupedTransactions) => {
-    if (!groupedTransactions || typeof groupedTransactions !== 'object') {
-        return {};
-    }
-
-    const totals = {};
-    
-    Object.entries(groupedTransactions).forEach(([key, transactions]) => {
-        if (!Array.isArray(transactions)) return;
-        
-        const [category] = (key || '').split(':');
-        if (!category) return;
-        
-        if (!totals[category]) {
-            totals[category] = { income: 0, expense: 0 };
-        }
-        
-        const sectionTotal = transactions.reduce((sum, t) => {
-            if (!t || typeof t.amount === 'undefined') return sum;
-            return sum + Math.abs(parseFloat(t.amount) || 0);
-        }, 0);
-
-        // Determine if this is income or expense based on the path
-        const isIncome = transactions.some(t => 
-            t.path.some(p => p.toLowerCase().includes('income')) ||
-            (t.type || '').toLowerCase().includes('invoice')
-        );
-        
-        totals[category][isIncome ? 'income' : 'expense'] = sectionTotal;
-    });
-    
-    return totals;
-};
-
-// Helper functions
-export const getTransactionPath = (transaction) => {
-    return transaction?.path?.join(' > ') || '';
-};
-
-export const filterTransactionsByCategory = (transactions, category, type = null) => {
-    if (!Array.isArray(transactions)) return [];
-    
-    return transactions.filter(t => {
-        const matchesCategory = t?.path?.includes(category);
-        if (!type) return matchesCategory;
-        return matchesCategory && (t.type || '').toLowerCase() === type.toLowerCase();
-    });
-};
-
-export const sortTransactionsByDate = (transactions) => {
-    if (!Array.isArray(transactions)) return [];
-    
-    return [...transactions].sort((a, b) => {
-        const dateA = new Date(a?.date || '');
-        const dateB = new Date(b?.date || '');
-        return dateA - dateB;
-    });
-};
-
-export const isTotalRow = (name) => {
-    return name && name.toLowerCase().startsWith('total for');
-};
-
-export const isMajorTotalRow = (name) => {
-    return name && MAJOR_TOTAL_ROWS.includes(name.toLowerCase());
+// Helper to get display name without classification
+export const getCategoryDisplayName = (categoryKey) => {
+    const parts = categoryKey.split(':');
+    return parts[1] || categoryKey;
 };
 
 export default {
-    processSection,
-    groupTransactions,
-    calculateCategoryTotals,
-    formatCurrency,
-    getTransactionPath,
     processPLDetail,
-    filterTransactionsByCategory,
-    sortTransactionsByDate,
-    isTotalRow,
-    isMajorTotalRow
+    formatCurrency,
+    getCategoryDisplayName
 };

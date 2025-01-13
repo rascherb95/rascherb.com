@@ -116,6 +116,33 @@
     font-weight: 600;
   }
   
+  /* Classification group styles */
+.classification-group {
+  margin-bottom: 2rem;
+}
+
+.classification-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #111827;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Transaction account styles */
+.transaction-account {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Count styles */
+.category-name-count {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+   
   /* Typography */
   .section-title {
     font-size: 1.5rem;
