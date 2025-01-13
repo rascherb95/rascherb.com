@@ -75,8 +75,64 @@
 /* Amount Formatting */
 .amount-cell {
     font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    
+}
+
+.amount-cell:hover{
+    font-weight: bolder;
 }
 
 .major-total-row .amount-cell::before {
     content: '$';
+}
+
+/* Transaction Detail Formatting */
+.transaction-details {
+    padding: 0.75rem 1rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* Adjust column widths */
+    gap: 1rem;
+    width: 100%;
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Specific alignment for each column */
+.detail-item:first-child {
+    /* Date column */
+    justify-self: start;
+}
+
+.detail-item:nth-child(2) {
+    /* Description column */
+    justify-self: start;
+}
+
+.detail-item:last-child {
+    /* Amount column */
+    justify-self: end;
+}
+
+.detail-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.detail-value {
+    font-weight: 500;
+    color: #111827;
+}
+
+/* Ensure expanded content stays within table bounds */
+.expanded-content td {
+    padding: 0;
+    width: 100%;
 }

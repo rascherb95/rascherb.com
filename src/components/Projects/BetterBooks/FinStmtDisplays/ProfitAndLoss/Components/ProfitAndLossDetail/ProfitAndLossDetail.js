@@ -8,16 +8,13 @@ const CategorySection = ({ categoryKey, transactions, total }) => {
 
     return (
         <div className="category-section">
-            <div className="category-header" onClick={() => setIsExpanded(!isExpanded)}>
+            <div className="category-header" >
                 <div className="category-header-left">
-                    <span className="expand-icon">
-                        {isExpanded ? '▼' : '▶'}
-                    </span>
                     <span className="category-name">
-                        {name} <span className="category-name-count">({transactions.length})</span>
+                        {name} 
                     </span>
                 </div>
-                <span className={`text-amount ${total < 0 ? 'text-negative' : 'text-positive'}`}>
+                <span className={`text-amount ${total < 0 ? 'text-negative' : 'text-positive'}`} onClick={() => setIsExpanded(!isExpanded)}>
                     {formatCurrency(total)}
                 </span>
             </div>
@@ -34,9 +31,6 @@ const CategorySection = ({ categoryKey, transactions, total }) => {
                             <div className="transaction-name">{transaction.name}</div>
                             {transaction.memo && (
                                 <div className="transaction-memo">{transaction.memo}</div>
-                            )}
-                            {transaction.account && (
-                                <div className="transaction-account">{transaction.account}</div>
                             )}
                         </div>
                     ))}
