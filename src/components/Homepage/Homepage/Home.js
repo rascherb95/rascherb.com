@@ -24,7 +24,7 @@ const Home = ({ profileImage }) => {
           <div className="description">
             <p>
               I'm a CPA that specializes in accounting due diligence in the software industry.
-              This is my personal website and mainly hosts projects I've worked on.
+              Welcome to my personal website.
             </p>
           </div>
           <a href="#projects" className="cta-button">

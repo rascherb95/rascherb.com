@@ -1,47 +1,66 @@
 import React from 'react';
+import './Dashboard.css';
 
 const FeatureList = () => {
   const features = {
-    Overall: [
-      { name: 'QuickBooks integration', completed: false },
-      { name: 'Other accounting integrations', completed: false },
-      { name: 'Data exports', completed: false },
+    Financials: [
+      { name: 'Income Statement', completed: true },
+      { name: 'IS: Efficient Transaction Review', completed: true },
+      { name: 'Balance Sheet', completed: false, inProgress: true },
+      { name: 'BS: Efficient Transaction Review', completed: false, inProgress: true },
+      { name: 'Custom Report Periods', completed: false },
+    ],
+    Analysis: [
+      { name: 'Automatically Identify Transactions for Review', completed: false },
+      { name: 'Automated KPI Analysis', completed: false },
+      { name: 'Other financial KPIs', completed: false },
+      { name: 'More to come...', completed: false },
     ],
     Dashboard: [
-      { name: 'Features list', completed: true },
       { name: 'Data Visualizations', completed: false },
-      { name: 'Customized Views', completed: false },
-      { name: 'More to come...', completed: false },
+      { name: 'Custom Dashboard Components', completed: false },
     ],
-    IncomeStatement: [
-      { name: 'Efficient Transaction Review', completed: true },
-      { name: 'Custom Report Period', completed: false },
-      { name: 'Multiple Months', completed: false },
-      { name: 'Automatically Flag Abnormal Transactions', completed: false },
-      { name: 'More to come...', completed: false },
-    ],
-    BalanceSheet: [
-      { name: 'Efficient Transaction Review', completed: false },
-      { name: 'Custom Report Period', completed: false },
-      { name: 'Multiple Months', completed: false },
-      { name: 'Automatically Flag Abnormal Transactions', completed: false },
-      { name: 'More to come...', completed: false },
+    Admin: [
+      { name: 'User accounts', completed: false },
+      { name: 'Data exports', completed: false },
+      { name: 'Data imports', completed: false },
+      { name: 'QuickBooks integration', completed: false },
     ],
   };
 
   const renderFeatureList = (category, features) => {
+    const completedCount = features.filter(f => f.completed).length;
+    const totalCount = features.length;
+    const progress = Math.round((completedCount / totalCount) * 100);
+
     return (
-      <div className="page-section">
-        <h3 className="text-xl font-semibold mb-2">{category}</h3>
-        <ul>
+      <div className="feature-card">
+        <div className="feature-card-header">
+          <h3 className="feature-card-title">{category}</h3>
+          <span className="feature-progress-count">
+            {completedCount} of {totalCount} complete
+          </span>
+        </div>
+        
+        <div className="progress-bar">
+          <div 
+            className="progress-bar-fill"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
+        <ul className="feature-list">
           {features.map((feature, index) => (
-            <li key={index}>
-              <input
-                type="checkbox"
-                checked={feature.completed}
-                disabled
-              />
-              <span>{feature.name}</span>
+            <li key={index} className="feature-item">
+              <div className={`feature-checkbox ${feature.completed ? 'completed' : feature.inProgress ? 'in-progress' : ''}`} />
+              <span className={`feature-name ${feature.completed ? 'completed' : 'pending'}`}>
+                {feature.name}
+              </span>
+              {!feature.completed && (
+                <span className="coming-soon-label">
+                  {feature.inProgress ? 'In progress' : 'Coming soon'}
+                </span>
+              )}
             </li>
           ))}
         </ul>
@@ -50,10 +69,13 @@ const FeatureList = () => {
   };
 
   return (
-    <div className="container">
-      <h2 className="text-2xl font-bold mb-4">Feature List</h2>
-
-      {/* Render D, Income Statement, and Balance Sheet */}
+    <div className="feature-container">
+      <div className="feature-header">
+        <h2 className="feature-title">Roadmap and Planned Features</h2>
+        <p className="feature-description">
+          See what features are on the way! Contact me if you have any ideas.
+        </p>
+      </div>
       {Object.entries(features).map(([category, featureList]) => 
         renderFeatureList(category, featureList)
       )}
