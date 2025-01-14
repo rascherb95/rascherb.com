@@ -1,56 +1,98 @@
-import React, { useState } from 'react';  // Add useState import
-import { MAJOR_TOTAL_ROWS, formatCurrency } from '../../utils/ProfitLossUtils';
+import React, { useState } from "react";
+import "./ProfitAndLoss.css";
 
-const ProfitLossRow = ({ row }) => {
+const ProfitLossRow = ({
+  label = "",
+  amount = null,
+  level = 0,
+  isTotal = false,
+  isMajorTotal = false,
+  transactions = [],
+  hasDirectTransactions = false,
+  isCategoryHeader = false,
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const hasTransactions =
+    hasDirectTransactions && transactions && transactions.length > 0;
 
-    const [isExpanded, setIsExpanded] = useState(false);  
-    const isTotal = row.Account.toLowerCase().includes('total');
-    const isMajorTotal = MAJOR_TOTAL_ROWS.includes(row.Account.toLowerCase().trim());
-    
-    const getIndentClass = () => {
-        if (row.Level === 0) return '';
-        return `indent-${row.Level}`;
-    };
+  const formatCurrency = (value) => {
+    if (value === null) return "";
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+    }).format(value);
+  };
 
-    return (
-        <>
-            <tr
-                className={`
-                    ${isMajorTotal ? 'major-total-row' : isTotal ? 'total-row' : ''}
-                    ${row.Type === 'header' ? 'section-header' : ''}
-                `}
-            >
-                <td className={getIndentClass()}>{row.Account}</td>
-                <td 
-                    className="amount-cell"
-                    onClick={() => setIsExpanded(!isExpanded)}
-                >
-                    {formatCurrency(row.Amount, isMajorTotal)}
-                </td>
-            </tr>
 
-            {isExpanded && (
-                  <tr className="expanded-content">
-                      <td colSpan="2">
-                          <div className="transaction-details">
-                              <div className="detail-item">
-                                  <span className="detail-label">Date</span>
-                                  <span className="detail-value">XX/XX/XX</span>
-                              </div>
-                              <div className="detail-item">
-                                  <span className="detail-label">Description</span>
-                                  <span className="detail-value">XX/XX/XX</span>
-                              </div>
-                              <div className="detail-item">
-                                  <span className="detail-label">Amount</span>
-                                  <span className="detail-value text-right">XX.XX</span>
-                              </div>
-                          </div>
-                      </td>
-                  </tr>
-              )}
-        </>
-    );
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  const rowClasses = [
+    "pl-row",
+    `pl-indent-${level}`,
+    isTotal && "pl-subtotal",
+    isMajorTotal && "pl-major-total",
+    isCategoryHeader && "pl-category-header",
+    hasTransactions && "pl-clickable",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const labelDisplay =
+    isTotal && !label.startsWith("Total") ? `Total ${label}` : label;
+
+  const amountClasses = ["pl-amount", amount < 0 && "pl-negative"]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <div className="pl-row-container">
+      <div
+        className={rowClasses}
+        onClick={() => hasTransactions && setIsExpanded(!isExpanded)}
+      >
+        <div className="pl-label">{labelDisplay}</div>
+        <div className={amountClasses}>{formatCurrency(amount)}</div>
+      </div>
+
+      {isExpanded && hasTransactions && (
+        <div className="pl-transactions">
+          {/* Transaction Detail Header Row */}
+          <div className="pl-transaction-header-row">
+            <div className="pl-transaction-date">Date</div>
+            <div className="pl-transaction-name">Party</div>
+            <div className="pl-transaction-memo">Memo</div>
+            <div className="pl-amount">Amount</div>
+          </div>
+
+          {/* Transaction Rows */}
+          {transactions.map((transaction, index) => (
+            <div key={index} className="pl-transaction-row">
+              <div className="pl-transaction-date">{formatDate(transaction.date)}</div>
+              <div className="pl-transaction-name">
+                {transaction.name || "-"}
+              </div>
+              <div className="pl-transaction-memo">
+                {transaction.memo || "-"}
+              </div>
+              <div
+                className={`pl-amount ${
+                  transaction.amount < 0 ? "pl-negative" : ""
+                }`}
+              >
+                {formatCurrency(transaction.amount)}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
-export default React.memo(ProfitLossRow);
+export default ProfitLossRow;

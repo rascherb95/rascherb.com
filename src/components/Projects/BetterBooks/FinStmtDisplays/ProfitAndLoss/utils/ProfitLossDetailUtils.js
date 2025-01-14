@@ -1,154 +1,157 @@
-// Constants and helper functions stay the same
-export const MAJOR_TOTAL_ROWS = [
-    'Total Income',
-    'Total Cost of Goods Sold',
-    'Gross Profit',
-    'Total Expenses',
-    'Net Operating Income',
-    'Net Income'
-];
+/**
+ * Utility functions for processing ProfitAndLossDetail JSON data
+ */
 
-// Format currency values consistently
-export const formatCurrency = (amount) => {
-    if (typeof amount !== 'number' || isNaN(amount)) {
-        return '$0.00';
+export const processPLDetailData = (data) => {
+    if (!data?.Rows?.Row?.[0]) {
+      throw new Error('Invalid P&L detail data structure');
     }
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(amount);
-};
-
-// Process section and build transaction hierarchy
-const processSection = (section, parentTitle = null) => {
-    if (!section) return [];
-
-    const transactions = [];
-    const sectionTitle = section.Header?.ColData?.[0]?.value || '';
-
-    // Process direct transaction data
-    if (section.type === 'Data' && section.ColData) {
-        transactions.push({
-            date: section.ColData[0]?.value || '',
-            type: section.ColData[1]?.value || '',
-            docNumber: section.ColData[2]?.value || '',
-            name: section.ColData[3]?.value || '',
-            memo: section.ColData[4]?.value || '',
-            account: section.ColData[5]?.value || '',
-            amount: parseFloat(section.ColData[6]?.value || '0'),
-            accountTitle: parentTitle || 'Other',
-            classification: getTopLevelParent(section)
-        });
-    }
-
-    // Process nested sections
-    if (section.Rows?.Row) {
-        const rows = Array.isArray(section.Rows.Row) ? section.Rows.Row : [section.Rows.Row];
-        rows.forEach(row => {
-            const childTransactions = processSection(row, sectionTitle || parentTitle);
-            transactions.push(...childTransactions);
-        });
-    }
-
-    return transactions;
-};
-
-// Get top-level classification (Income, COGS, Expenses)
-const getTopLevelParent = (section) => {
-    let current = section;
-    let lastTitle = '';
-
-    while (current) {
-        const title = current.Header?.ColData?.[0]?.value || '';
-        if (['Income', 'Cost of Goods Sold', 'Expenses'].includes(title)) {
-            return title;
+    return processMainSection(data.Rows.Row[0]);
+  };
+  
+  const processMainSection = (section) => {
+    if (!section?.Rows?.Row) return null;
+  
+    const result = {
+      type: 'main',
+      sections: []
+    };
+  
+    section.Rows.Row.forEach(category => {
+      if (category.Header?.ColData[0]?.value) {
+        const categoryData = processCategorySection(category);
+        if (categoryData) {
+          result.sections.push(categoryData);
         }
-        if (title) lastTitle = title;
-        current = current.parent;
-    }
+      }
+    });
 
-    return lastTitle;
+  // Add net income if available
+  if (section.Summary?.ColData) {
+    result.netIncome = {
+      label: section.Summary.ColData[0].value,
+      amount: parseFloat(section.Summary.ColData[6].value) || 0
+    };
+  }
+
+  return result;
 };
 
-// Main processing function
-export const processPLDetail = (data) => {
-    if (!data) {
-        return {
-            groupedTransactions: {},
-            categoryTotals: {},
-            processed: false
-        };
-    }
+const processCategorySection = (category) => {
+  if (!category.Header?.ColData[0]?.value) return null;
 
-    try {
-        // Process all transactions
-        const allTransactions = processSection(data);
+  const result = {
+    type: 'category',
+    label: category.Header.ColData[0].value,
+    items: [],
+    total: 0
+  };
 
-        // Group transactions by account title and classification
-        const groupedTransactions = allTransactions.reduce((acc, trans) => {
-            const key = `${trans.classification}:${trans.accountTitle}`;
-            if (!acc[key]) {
-                acc[key] = [];
+  if (category.Rows?.Row) {
+    category.Rows.Row.forEach(item => {
+      const processedItem = processDetailedItem(item);
+      if (processedItem) {
+        result.items.push(processedItem);
+      }
+    });
+  }
+
+  if (category.Summary?.ColData) {
+    result.total = parseFloat(category.Summary.ColData[6].value) || 0;
+  }
+
+  return result;
+};
+
+const processDetailedItem = (item) => {
+    const itemLabel = item.Header?.ColData[0]?.value || '';
+    console.log(`\nProcessing item: ${itemLabel}`);
+  
+    const result = {
+      type: 'item',
+      label: itemLabel,
+      items: [],
+      transactions: [],
+      directAmount: 0,
+      totalWithSubs: 0,
+      hasDirectTransactions: false
+    };
+  
+    // Process all rows at this level first to separate direct transactions from subcategories
+    if (item.Rows?.Row) {
+      let directTotal = 0;
+      const directTransactions = [];
+      const subcategories = [];
+  
+      item.Rows.Row.forEach(row => {
+        if (row.type === 'Data') {
+          // This is a direct transaction
+          const amount = parseFloat(row.ColData[6].value) || 0;
+          const transaction = {
+            date: row.ColData[0].value,
+            type: row.ColData[1].value,
+            number: row.ColData[2].value,
+            name: row.ColData[3].value,
+            memo: row.ColData[4].value,
+            split: row.ColData[5].value,
+            amount: amount,
+            balance: parseFloat(row.ColData[7].value) || 0
+          };
+          directTransactions.push(transaction);
+          directTotal += amount;
+        } else if (row.Header) {
+          // This is a subcategory
+          subcategories.push(row);
+        } else if (row.type === 'Section' && row.Rows?.Row) {
+          // Handle direct transactions within sections
+          row.Rows.Row.forEach(sectionRow => {
+            if (sectionRow.type === 'Data') {
+              const amount = parseFloat(sectionRow.ColData[6].value) || 0;
+              const transaction = {
+                date: sectionRow.ColData[0].value,
+                type: sectionRow.ColData[1].value,
+                number: sectionRow.ColData[2].value,
+                name: sectionRow.ColData[3].value,
+                memo: sectionRow.ColData[4].value,
+                split: sectionRow.ColData[5].value,
+                amount: amount,
+                balance: parseFloat(sectionRow.ColData[7].value) || 0
+              };
+              directTransactions.push(transaction);
+              directTotal += amount;
             }
-            acc[key].push(trans);
-            return acc;
-        }, {});
-
-        // Calculate totals for each category
-        const categoryTotals = {};
-        Object.entries(groupedTransactions).forEach(([key, transactions]) => {
-            categoryTotals[key] = transactions.reduce((sum, t) => sum + t.amount, 0);
-        });
-
-        // Calculate major totals
-        const incomeTotal = Object.entries(groupedTransactions)
-            .filter(([key]) => key.startsWith('Income:'))
-            .reduce((sum, [_, trans]) => 
-                sum + trans.reduce((s, t) => s + t.amount, 0), 0);
-
-        const cogsTotal = Object.entries(groupedTransactions)
-            .filter(([key]) => key.startsWith('Cost of Goods Sold:'))
-            .reduce((sum, [_, trans]) => 
-                sum + trans.reduce((s, t) => s + t.amount, 0), 0);
-
-        const expensesTotal = Object.entries(groupedTransactions)
-            .filter(([key]) => key.startsWith('Expenses:'))
-            .reduce((sum, [_, trans]) => 
-                sum + trans.reduce((s, t) => s + t.amount, 0), 0);
-
-        // Add major totals
-        categoryTotals['Total Income'] = incomeTotal;
-        categoryTotals['Total Cost of Goods Sold'] = cogsTotal;
-        categoryTotals['Gross Profit'] = incomeTotal - cogsTotal;
-        categoryTotals['Total Expenses'] = expensesTotal;
-        categoryTotals['Net Income'] = incomeTotal - cogsTotal - expensesTotal;
-
-        return {
-            groupedTransactions,
-            categoryTotals,
-            processed: true
-        };
-    } catch (error) {
-        console.error('Error processing P&L detail:', error);
-        return {
-            groupedTransactions: {},
-            categoryTotals: {},
-            processed: false,
-            error: error.message
-        };
+          });
+        }
+      });
+  
+      // Set direct amounts and transactions
+      if (directTransactions.length > 0) {
+        result.transactions = directTransactions;
+        result.directAmount = directTotal;
+        result.hasDirectTransactions = true;
+        console.log(`Direct amount for ${itemLabel}: ${directTotal}`);
+      }
+  
+      // Process subcategories
+      subcategories.forEach(subcategory => {
+        const processedSub = processDetailedItem(subcategory);
+        if (processedSub) {
+          result.items.push(processedSub);
+        }
+      });
     }
-};
+  
+    // Set total with subs
+    if (item.Summary?.ColData) {
+      result.totalWithSubs = parseFloat(item.Summary.ColData[6].value) || 0;
+    } else {
+      const subTotal = result.items.reduce((sum, subItem) => sum + (subItem.totalWithSubs || 0), 0);
+      result.totalWithSubs = result.directAmount + subTotal;
+    }
+  
+    return result;
+  };
 
-// Helper to get display name without classification
-export const getCategoryDisplayName = (categoryKey) => {
-    const parts = categoryKey.split(':');
-    return parts[1] || categoryKey;
-};
-
-export default {
-    processPLDetail,
-    formatCurrency,
-    getCategoryDisplayName
+export const utils = {
+  processPLDetailData
 };

@@ -1,138 +1,189 @@
-.profit-loss-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+/* General Container */
+.pl-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #333;
 }
 
-.company-name {
-    text-align: center;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+/* Rows */
+.pl-row {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) auto;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
 }
 
-.report-title {
-    text-align: center;
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
+.pl-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
 }
 
-.report-period {
-    text-align: center;
-    color: #666;
-    margin-bottom: 2rem;
+.pl-amount {
+  font-family: monospace;
+  text-align: right;
+  white-space: nowrap;
+  min-width: 120px;
 }
 
-.financial-table {
-    width: 100%;
-    border-collapse: collapse;
+/* Category Styling */
+.pl-category {
+  font-weight: 500;
+  color: #2c3e50;
 }
 
-.financial-table td {
-    padding: 4px 8px;
-    border-bottom: 1px solid #eee;
+/* Subtotal Styling */
+.pl-subtotal {
+  font-weight: 600;
+  border-top: 2px solid #dee2e6;
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
 }
 
-.financial-table td:last-child {
-    text-align: right;
+/* Major Total Styling */
+.pl-major-total {
+  font-weight: 700;
+  font-size: 1.1em;
+  border-top: 2px solid #2c3e50;
+  border-bottom: 2px solid #2c3e50;
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  background-color: #f4f4f4;
 }
 
-/* Add styles for error and loading states */
-.error-message {
-    color: #dc2626;
-    padding: 1rem;
-}
-
-.loading-message {
-    padding: 1rem;
-}
-
-/* Header and Total Row Styles */
-.section-header {
-    font-weight: 600;
-}
-
-.total-row {
-    font-weight: 600;
-    border-bottom: 1px solid #000;
-}
-
-.major-total-row {
-    font-weight: 700;
-    border-top: 1px solid #000;
-    border-bottom: double 3px #000;
-}
-
-.major-total-row td {
-    border-bottom: none;  /* Override the default border */
+/* Negative Amounts */
+.pl-negative {
+  color: #dc3545;
 }
 
 /* Indentation Levels */
-.indent-1 { padding-left: 20px !important; }
-.indent-2 { padding-left: 40px !important; }
-.indent-3 { padding-left: 60px !important; }
-
-/* Amount Formatting */
-.amount-cell {
-    font-variant-numeric: tabular-nums;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    
+.pl-indent-0 {
+  font-weight: bolder;
 }
 
-.amount-cell:hover{
-    font-weight: bolder;
+.pl-indent-1 {
+  padding-left: 1.5rem;
 }
 
-.major-total-row .amount-cell::before {
-    content: '$';
+.pl-indent-2 {
+  padding-left: 3rem;
 }
 
-/* Transaction Detail Formatting */
-.transaction-details {
-    padding: 0.75rem 1rem;
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr; /* Adjust column widths */
+.pl-indent-3 {
+  padding-left: 4.5rem;
+}
+
+/* Transaction Header Row */
+.pl-transaction-header-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 1fr;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: #e9ecef;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  color: #495057;
+}
+
+/* Individual header cell styling */
+.pl-transaction-header-row > div {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pl-transaction-header-row .pl-amount {
+  text-align: right;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pl-transaction-header-row {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .pl-transaction-header-row > div {
+    text-align: center;
+  }
+}
+
+/* Transaction Section */
+.pl-transactions {
+  margin-left: 1.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-left: 2px solid #dee2e6;
+  display: grid;
+  gap: 1rem;
+}
+
+/* Transaction Row with 4 Columns */
+.pl-transaction-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 1fr;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.pl-transaction-row:hover {
+  background-color: #f1f1f1;
+}
+
+/* Styling for individual cells */
+.pl-transaction-date,
+.pl-transaction-name,
+.pl-transaction-memo,
+.pl-amount {
+  word-wrap: break-word;
+  padding: 0.2rem 0;
+  letter-spacing: 0.5px;
+}
+
+.pl-transaction-name,
+.pl-transaction-memo {
+  color: #555;
+}
+
+/* Hover Effect and Clickable Rows */
+.pl-clickable {
+  cursor: pointer;
+}
+
+.pl-clickable:hover {
+  background-color: #e9ecef;
+}
+
+/* Small screens: Ensure readability with fixed 4 columns */
+@media (max-width: 768px) {
+  .pl-row {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .pl-transaction-row {
+    grid-template-columns: 1fr 1fr 2fr 1fr;
     gap: 1rem;
-    width: 100%;
-    background-color: #f9fafb;
-    border-top: 1px solid #e5e7eb;
-}
+  }
 
-.detail-item {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Specific alignment for each column */
-.detail-item:first-child {
-    /* Date column */
-    justify-self: start;
-}
-
-.detail-item:nth-child(2) {
-    /* Description column */
-    justify-self: start;
-}
-
-.detail-item:last-child {
-    /* Amount column */
-    justify-self: end;
-}
-
-.detail-label {
-    font-size: 0.875rem;
-    color: #6b7280;
-    margin-bottom: 0.25rem;
-}
-
-.detail-value {
-    font-weight: 500;
-    color: #111827;
-}
-
-/* Ensure expanded content stays within table bounds */
-.expanded-content td {
-    padding: 0;
-    width: 100%;
+  .pl-transactions {
+    margin-left: 0;
+    padding: 0.5rem;
+    background-color: #f8f9fa;
+  }
 }
