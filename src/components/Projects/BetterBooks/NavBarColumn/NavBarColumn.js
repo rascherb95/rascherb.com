@@ -9,7 +9,7 @@ const DisplaySelector = ({ selectedView, setSelectedView }) => {
           onClick={() => setSelectedView('dashboard')}
           className={`nav-button ${selectedView === 'dashboard' ? 'active' : ''}`}
         >
-          Dashboard
+          Dashboard & Features
         </button>
         <button
           onClick={() => setSelectedView('income-statement')}
