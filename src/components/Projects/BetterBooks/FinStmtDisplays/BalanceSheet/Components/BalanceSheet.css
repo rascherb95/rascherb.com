@@ -1,0 +1,223 @@
+/* General Container */
+.bs-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Rows */
+.bs-row {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) auto auto;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.bs-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bs-debit,
+.bs-credit,
+.bs-amount {
+  font-family: monospace;
+  text-align: right;
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+/* Category Styling */
+.bs-type-category {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+/* Subtotal Styling */
+.bs-type-subtotal {
+  font-weight: 600;
+  border-top: 2px solid #dee2e6;
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
+}
+
+/* Major Total Styling */
+.bs-type-total {
+  font-weight: 700;
+  font-size: 1.1em;
+  border-top: 2px solid #2c3e50;
+  border-bottom: 2px solid #2c3e50;
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  background-color: #f4f4f4;
+}
+
+/* Negative Amounts */
+.bs-negative {
+  color: #dc3545;
+}
+
+/* Indentation Levels */
+.bs-indent-0 {
+  font-weight: bolder;
+}
+
+.bs-indent-1 {
+  padding-left: 1.5rem;
+}
+
+.bs-indent-2 {
+  padding-left: 3rem;
+}
+
+.bs-indent-3 {
+  padding-left: 4.5rem;
+}
+
+/* Transaction Section */
+.bs-transactions {
+  margin-left: 1.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-left: 2px solid #dee2e6;
+  display: grid;
+  gap: 1rem;
+}
+
+/* Transaction Header Row */
+.bs-transaction-header-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: #e9ecef;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  color: #495057;
+}
+
+/* Transaction Row */
+.bs-transaction-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.bs-transaction-row:hover {
+  background-color: #f1f1f1;
+}
+
+/* Transaction Cell Styling */
+.bs-transaction-date,
+.bs-transaction-name,
+.bs-transaction-memo {
+  word-wrap: break-word;
+  padding: 0.2rem 0;
+  letter-spacing: 0.5px;
+  color: #555;
+}
+
+/* Hover Effect and Clickable Rows */
+.bs-clickable {
+  cursor: pointer;
+}
+
+.bs-clickable:hover {
+  background-color: #e9ecef;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .bs-row {
+    grid-template-columns: 1fr auto;
+    text-align: left;
+  }
+
+  .bs-transaction-row,
+  .bs-transaction-header-row {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .bs-transactions {
+    margin-left: 0;
+    padding: 0.5rem;
+  }
+  
+  .bs-indent-1,
+  .bs-indent-2,
+  .bs-indent-3 {
+    padding-left: 1rem;
+  }
+}
+/* Transaction Section */
+.bs-transactions {
+  margin-left: 1.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-left: 2px solid #dee2e6;
+  display: grid;
+  gap: 1rem;
+}
+
+/* Transaction Header Row */
+.bs-transaction-header-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: #e9ecef;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  color: #495057;
+}
+
+/* Transaction Row */
+.bs-transaction-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.bs-transaction-row:hover {
+  background-color: #f1f1f1;
+}
+
+/* Transaction Cell Styling */
+.bs-transaction-date,
+.bs-transaction-name,
+.bs-transaction-memo {
+  word-wrap: break-word;
+  padding: 0.2rem 0;
+  letter-spacing: 0.5px;
+  color: #555;
+}

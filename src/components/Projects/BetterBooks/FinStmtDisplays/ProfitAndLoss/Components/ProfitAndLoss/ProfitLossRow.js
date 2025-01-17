@@ -22,13 +22,12 @@ const ProfitLossRow = ({
     }).format(value);
   };
 
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -73,7 +72,9 @@ const ProfitLossRow = ({
           {/* Transaction Rows */}
           {transactions.map((transaction, index) => (
             <div key={index} className="pl-transaction-row">
-              <div className="pl-transaction-date">{formatDate(transaction.date)}</div>
+              <div className="pl-transaction-date">
+                {formatDate(transaction.date)}
+              </div>
               <div className="pl-transaction-name">
                 {transaction.name || "-"}
               </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import BaseProjectLayout from "../BaseProjectLayout";
 import { SAMPLE_PL_DETAIL_DATA } from "./FinStmtDisplays/Data/SamplePLDetailData";
+import { SAMPLE_BS_DETAIL_DATA } from "./FinStmtDisplays/Data/SampleBSDetailData"
 import ProfitAndLoss from "./FinStmtDisplays/ProfitAndLoss/Components/ProfitAndLoss/ProfitAndLoss";
 import Dashboard from "./FinStmtDisplays/Dashboard/Components/Dashboard";
 import BalanceSheet from "./FinStmtDisplays/BalanceSheet/Components/BalanceSheet";
@@ -16,7 +17,7 @@ const BetterBooks = () => {
       case "income-statement":
         return <ProfitAndLoss data={SAMPLE_PL_DETAIL_DATA} />;
       case "balance-sheet":
-        return <BalanceSheet data={SAMPLE_PL_DETAIL_DATA} />;
+        return <BalanceSheet data={SAMPLE_BS_DETAIL_DATA} />;
       default:
         return <ProfitAndLoss data={SAMPLE_PL_DETAIL_DATA} />;
     }
