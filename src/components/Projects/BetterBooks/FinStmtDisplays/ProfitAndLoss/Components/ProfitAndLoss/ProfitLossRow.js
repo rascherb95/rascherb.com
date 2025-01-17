@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PLTransactionDetail from "./PLTransactionDetail";
 import "./ProfitAndLoss.css";
 
 const ProfitLossRow = ({
@@ -20,15 +21,6 @@ const ProfitLossRow = ({
     return new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 2,
     }).format(value);
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
   };
 
   const rowClasses = [
@@ -60,37 +52,7 @@ const ProfitLossRow = ({
       </div>
 
       {isExpanded && hasTransactions && (
-        <div className="pl-transactions">
-          {/* Transaction Detail Header Row */}
-          <div className="pl-transaction-header-row">
-            <div className="pl-transaction-date">Date</div>
-            <div className="pl-transaction-name">Party</div>
-            <div className="pl-transaction-memo">Memo</div>
-            <div className="pl-amount">Amount</div>
-          </div>
-
-          {/* Transaction Rows */}
-          {transactions.map((transaction, index) => (
-            <div key={index} className="pl-transaction-row">
-              <div className="pl-transaction-date">
-                {formatDate(transaction.date)}
-              </div>
-              <div className="pl-transaction-name">
-                {transaction.name || "-"}
-              </div>
-              <div className="pl-transaction-memo">
-                {transaction.memo || "-"}
-              </div>
-              <div
-                className={`pl-amount ${
-                  transaction.amount < 0 ? "pl-negative" : ""
-                }`}
-              >
-                {formatCurrency(transaction.amount)}
-              </div>
-            </div>
-          ))}
-        </div>
+        <PLTransactionDetail transactions={transactions} />
       )}
     </div>
   );

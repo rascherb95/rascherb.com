@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import BSTransactionDetail from "./BSTransactionDetail";
 import "./BalanceSheet.css";
 
 const BalanceSheetRow = ({
@@ -6,9 +7,11 @@ const BalanceSheetRow = ({
   type = "",
   balance = null,
   indentLevel = 0,
-  onAmountClick,
+  transactions = [], // Added prop
   id,
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false); // Added local state
+
   const formatCurrency = (value) => {
     if (value === null) return "";
     return new Intl.NumberFormat("en-US", {
@@ -16,19 +19,19 @@ const BalanceSheetRow = ({
     }).format(value);
   };
 
-
   const rowClasses = [
     "bs-row",
     `bs-indent-${indentLevel}`,
     `bs-type-${type}`,
-    onAmountClick && "bs-clickable",
+    transactions?.length > 0 && "bs-clickable", // Modified
   ]
     .filter(Boolean)
     .join(" ");
 
   const handleRowClick = () => {
-    if (onAmountClick && id) {
-      onAmountClick(id);
+    if (transactions?.length > 0) {
+      // Modified
+      setIsExpanded(!isExpanded); // Toggle local state
     }
   };
 
@@ -45,6 +48,9 @@ const BalanceSheetRow = ({
           </div>
         )}
       </div>
+      {isExpanded && transactions?.length > 0 && (
+        <BSTransactionDetail transactions={transactions} />
+      )}
     </div>
   );
 };

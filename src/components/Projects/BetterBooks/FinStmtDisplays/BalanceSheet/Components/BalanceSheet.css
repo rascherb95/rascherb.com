@@ -7,10 +7,47 @@
   color: #333;
 }
 
+/* Main container */
+.balance-sheet {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Content area */
+.balance-sheet-content {
+  margin-top: 1.5rem;
+}
+
+/* Section styling */
+.balance-sheet-section {
+  margin-bottom: 2rem;
+}
+
+/* Header styling to match P&L */
+.balance-sheet-header {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1rem;
+}
+
+.balance-sheet-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.balance-sheet-header p {
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
 /* Rows */
 .bs-row {
   display: grid;
-  grid-template-columns: minmax(200px, 1fr) auto auto;
+  grid-template-columns: minmax(200px, 1fr) auto;
   gap: 1rem;
   padding: 0.5rem 0;
   align-items: center;
@@ -22,13 +59,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
-.bs-debit,
-.bs-credit,
 .bs-amount {
   font-family: monospace;
   text-align: right;
@@ -36,9 +68,10 @@
   min-width: 120px;
 }
 
-/* Indentation Levels */
+/* Indentation and Type Styling */
 .bs-indent-0 {
-  font-weight: bolder;
+  font-weight: 700;
+  font-size: 1.1em;
 }
 
 .bs-indent-1 {
@@ -47,6 +80,13 @@
 
 .bs-indent-2 {
   padding-left: 3rem;
+}
+
+.bs-type-total {
+  font-weight: 600;
+  border-top: 2px solid #dee2e6;
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
 }
 
 /* Transaction Section */
@@ -63,7 +103,7 @@
 
 .bs-transaction-header-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 2fr 1fr 1fr;
   gap: 1rem;
   padding: 0.5rem;
   background-color: #e9ecef;
@@ -75,9 +115,15 @@
   color: #495057;
 }
 
+/* Right-align the Amount and Balance headers */
+.bs-transaction-header-row > div:nth-child(4),
+.bs-transaction-header-row > div:nth-child(5) {
+  text-align: right;
+}
+
 .bs-transaction-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 2fr 1fr 1fr;
   gap: 1rem;
   padding: 0.5rem;
   background-color: #fff;
@@ -90,25 +136,63 @@
   background-color: #f1f1f1;
 }
 
+/* Right-align monetary values */
+.bs-transaction-amount,
+.bs-transaction-balance {
+  text-align: right;
+  font-family: monospace;
+}
+
+/* Style for the "Beginning Balance" row */
+.bs-transaction-row:first-child {
+  font-weight: 500;
+  background-color: #f8f9fa;
+}
+
+/* Right-align amount and balance columns in all rows */
+.bs-transaction-row > div:nth-child(4),
+.bs-transaction-row > div:nth-child(5) {
+  text-align: right;
+  font-family: monospace;
+}
+
+/* Styling for individual cells */
 .bs-transaction-date,
 .bs-transaction-name,
-.bs-transaction-memo {
+.bs-transaction-memo,
+.bs-transaction-amount {
   word-wrap: break-word;
   padding: 0.2rem 0;
   letter-spacing: 0.5px;
+}
+
+.bs-transaction-name,
+.bs-transaction-memo {
   color: #555;
+}
+
+/* Hover Effects and Clickable Rows */
+.bs-clickable {
+  cursor: pointer;
+}
+
+.bs-clickable:hover {
+  background-color: #e9ecef;
+}
+
+.bs-negative {
+  color: #dc3545;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .bs-row {
-    grid-template-columns: 1fr auto;
-    text-align: left;
+    grid-template-columns: 1fr;
+    text-align: center;
   }
 
-  .bs-transaction-row,
-  .bs-transaction-header-row {
-    grid-template-columns: 1fr 1fr 1fr;
+  .bs-transaction-row {
+    grid-template-columns: 1fr 1fr 2fr 1fr;
     gap: 0.5rem;
   }
 
