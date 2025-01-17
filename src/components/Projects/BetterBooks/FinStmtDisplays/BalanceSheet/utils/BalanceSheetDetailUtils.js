@@ -1,21 +1,21 @@
 const processBalanceSheetDetail = (data) => {
-  console.log("Processing Balance Sheet Detail", data);
+  //console.log("Processing Balance Sheet Detail", data);
   if (!data?.Rows?.Row) {
-    console.warn("No rows found in data.");
+    //console.warn("No rows found in data.");
     return [];
   }
   return data.Rows.Row.map(section => processSection(section));
 };
 
 const processSection = (section) => {
-  console.log("Processing section", section);
+  //console.log("Processing section", section);
   if (!section?.Header?.ColData) {
-    console.warn("No header data found in section.");
+    //console.warn("No header data found in section.");
     return null;
   }
   const sectionName = section.Header.ColData[0]?.value || '';
   const sectionTotal = section.Summary?.ColData[1]?.value || '';
-  console.log(`Section Name: ${sectionName}, Total: ${sectionTotal}`);
+ //console.log(`Section Name: ${sectionName}, Total: ${sectionTotal}`);
   const accounts = section.Rows?.Row?.map(account => processAccount(account)) || [];
   return {
     name: sectionName,
@@ -26,15 +26,15 @@ const processSection = (section) => {
 };
 
 const processAccount = (account) => {
-  console.log("Processing account", account);
+  //console.log("Processing account", account);
   if (!account?.Header?.ColData) {
-    console.warn("No header data found in account.");
+    //console.warn("No header data found in account.");
     return null;
   }
   const header = account.Header.ColData[0] || {};
   const accountName = header.value || '';
   const accountId = header.id;
-  console.log(`Account Name: ${accountName}, ID: ${accountId}`);
+  //console.log(`Account Name: ${accountName}, ID: ${accountId}`);
   // Get the final balance from the last transaction if it exists
   let finalBalance = '';
   if (account.Rows?.Row?.length > 0) {
@@ -44,7 +44,7 @@ const processAccount = (account) => {
       finalBalance = lastTransaction.ColData[9].value || '';
     }
   }
-  console.log(`Final Balance: ${finalBalance}`);
+  //console.log(`Final Balance: ${finalBalance}`);
   // Check if the account has sub-accounts
   const hasSubAccounts = account.Rows?.Row?.some(row => row.Header);
   if (hasSubAccounts) {
@@ -91,13 +91,13 @@ const processAccount = (account) => {
 };
 
 const processTransaction = (transaction) => {
-  console.log("Processing transaction", transaction);
+  //console.log("Processing transaction", transaction);
   if (!transaction?.ColData) {
-    console.warn("No column data found in transaction.");
+    //console.warn("No column data found in transaction.");
     return null;
   }
   const cols = transaction.ColData;
-  console.log("Transaction columns", cols);
+  //console.log("Transaction columns", cols);
   return {
     date: cols[0]?.value || '',
     transactionType: cols[1]?.value || '',

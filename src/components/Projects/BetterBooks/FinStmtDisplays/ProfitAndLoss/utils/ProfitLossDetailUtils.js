@@ -65,7 +65,7 @@ const processCategorySection = (category) => {
 
 const processDetailedItem = (item) => {
     const itemLabel = item.Header?.ColData[0]?.value || '';
-    console.log(`\nProcessing item: ${itemLabel}`);
+    //console.log(`\nProcessing item: ${itemLabel}`);
   
     const result = {
       type: 'item',
@@ -129,7 +129,7 @@ const processDetailedItem = (item) => {
         result.transactions = directTransactions;
         result.directAmount = directTotal;
         result.hasDirectTransactions = true;
-        console.log(`Direct amount for ${itemLabel}: ${directTotal}`);
+        //console.log(`Direct amount for ${itemLabel}: ${directTotal}`);
       }
   
       // Process subcategories

@@ -18,11 +18,13 @@ const BalanceSheetHeader = ({ headerData }) => {
   return (
     <div className="balance-sheet-header">
       <h1>{headerData.ReportName || "Balance Sheet"}</h1>
-      <div>
-        <p>
-          {headerData.ReportBasis} basis as of{" "}
-          {formatDate(headerData.EndPeriod)}
-        </p>
+      <div className="bs-header-subtitle">
+        <div>
+          <p>
+            {headerData.ReportBasis} basis as of{" "}
+            {formatDate(headerData.EndPeriod)}
+          </p>
+        </div>
       </div>
     </div>
   );

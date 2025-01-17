@@ -9,23 +9,23 @@
 
 /* Header Styling */
 .pl-header {
-  margin-bottom: 1.5rem;  /* was mb-6 */
-  border-bottom: 1px solid #ddd;  /* was border-b */
-  padding-bottom: 1rem;  /* was pb-4 */
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1rem;
 }
 
 .pl-header h1 {
-  font-size: 1.5rem;  /* was text-2xl */
-  font-weight: 700;   /* was font-bold */
-  margin-bottom: 0.5rem;  /* was mb-2 */
+  font-size: 1.5rem;
+  font-weight: 700; 
+  margin-bottom: 0.5rem; 
 }
 
 .pl-header-subtitle {
-  color: #666;  /* was text-gray-600 */
+  color: #666;
 }
 
 .pl-header-subtitle p {
-  margin-bottom: 0.25rem;  /* was mb-1 */
+  margin-bottom: 0.25rem;
 }
 
 /* Rows */

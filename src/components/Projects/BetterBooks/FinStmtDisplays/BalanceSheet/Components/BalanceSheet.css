@@ -1,13 +1,4 @@
 /* General Container */
-.bs-container {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: #333;
-}
-
-/* Main container */
 .balance-sheet {
   max-width: 1200px;
   margin: 2rem auto;
@@ -16,17 +7,7 @@
   color: #333;
 }
 
-/* Content area */
-.balance-sheet-content {
-  margin-top: 1.5rem;
-}
-
-/* Section styling */
-.balance-sheet-section {
-  margin-bottom: 2rem;
-}
-
-/* Header styling to match P&L */
+/* Header styling*/
 .balance-sheet-header {
   margin-bottom: 1.5rem;
   border-bottom: 1px solid #ddd;
@@ -39,10 +20,20 @@
   margin-bottom: 0.5rem;
 }
 
-.balance-sheet-header p {
+.bs-header-subtitle {
   color: #666;
-  margin-bottom: 0.25rem;
 }
+
+/* Content area */
+.balance-sheet-content {
+  margin-top: 1.5rem;
+}
+
+/* Section styling */
+.balance-sheet-section {
+  margin-bottom: 2rem;
+}
+
 
 /* Rows */
 .bs-row {
