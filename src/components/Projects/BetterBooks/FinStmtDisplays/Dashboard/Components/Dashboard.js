@@ -6,9 +6,17 @@ const FeatureList = () => {
     Financials: [
       { name: 'Income Statement', completed: true },
       { name: 'IS: Efficient Transaction Review', completed: true },
-      { name: 'Balance Sheet', completed: false, inProgress: true },
-      { name: 'BS: Efficient Transaction Review', completed: false, inProgress: true },
+      { name: 'Balance Sheet', completed: true},
+      { name: 'BS: Efficient Transaction Review', completed: true},
+      { name: 'BS - Presentation & Classification Updates', completed: false, inProgress: true },
+      { name: 'BS - Net Income Source Limitation', completed: false, inProgress: true },
+    ],
+    BackEnd: [
+      { name: 'User accounts', completed: false },
+      { name: 'Data imports', completed: false },
+      { name: 'Data exports', completed: false },
       { name: 'Custom Report Periods', completed: false },
+      { name: 'QuickBooks integration', completed: false },
     ],
     Analysis: [
       { name: 'Automatically Identify Transactions for Review', completed: false },
@@ -19,12 +27,6 @@ const FeatureList = () => {
     Dashboard: [
       { name: 'Data Visualizations', completed: false },
       { name: 'Custom Dashboard Components', completed: false },
-    ],
-    Admin: [
-      { name: 'User accounts', completed: false },
-      { name: 'Data exports', completed: false },
-      { name: 'Data imports', completed: false },
-      { name: 'QuickBooks integration', completed: false },
     ],
   };
 

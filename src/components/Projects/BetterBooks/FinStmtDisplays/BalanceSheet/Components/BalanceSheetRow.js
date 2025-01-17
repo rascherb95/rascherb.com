@@ -7,10 +7,10 @@ const BalanceSheetRow = ({
   type = "",
   balance = null,
   indentLevel = 0,
-  transactions = [], // Added prop
+  transactions = [], 
   id,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false); // Added local state
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const formatCurrency = (value) => {
     if (value === null) return "";
@@ -23,15 +23,14 @@ const BalanceSheetRow = ({
     "bs-row",
     `bs-indent-${indentLevel}`,
     `bs-type-${type}`,
-    transactions?.length > 0 && "bs-clickable", // Modified
+    transactions?.length > 0 && "bs-clickable",
   ]
     .filter(Boolean)
     .join(" ");
 
   const handleRowClick = () => {
     if (transactions?.length > 0) {
-      // Modified
-      setIsExpanded(!isExpanded); // Toggle local state
+      setIsExpanded(!isExpanded);
     }
   };
 

@@ -24,6 +24,7 @@ const BalanceSheetHeader = ({ headerData }) => {
             {headerData.ReportBasis} basis as of{" "}
             {formatDate(headerData.EndPeriod)}
           </p>
+          <p>Note: QuickBooks off-the-shelf reporting does not allow for 'custom range' balance sheets that display an accurate net income for that period. The net income displayed is for all of FY24, not for Dec-24.</p>
         </div>
       </div>
     </div>

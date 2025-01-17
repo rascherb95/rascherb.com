@@ -1,103 +1,143 @@
 const processBalanceSheetDetail = (data) => {
-  //console.log("Processing Balance Sheet Detail", data);
   if (!data?.Rows?.Row) {
-    //console.warn("No rows found in data.");
     return [];
   }
-  return data.Rows.Row.map(section => processSection(section));
+  // Process main sections while tracking final totals
+  const sections = [];
+  let finalTotalRow = null;
+  let netIncomeValue = null;
+
+  data.Rows.Row.forEach((row, index) => {
+    // Store the final total row separately
+    if (row.Summary?.ColData?.[0]?.value === "Total Liabilities and Equity") {
+      finalTotalRow = row;
+      return;
+    }
+    
+    // Capture Net Income value from the Summary
+    if (row.Summary?.ColData?.[0]?.value === "Net Income") {
+      netIncomeValue = row.Summary.ColData[9]?.value || '';
+    }
+
+    const processedSection = processMainSection(row, netIncomeValue);
+    if (processedSection) {
+      sections.push(processedSection);
+    }
+  });
+
+  // Update the Liabilities and Equity section with the correct total
+  if (finalTotalRow) {
+    const liabilitiesSection = sections.find(s => s.name === "LIABILITIES AND EQUITY");
+    if (liabilitiesSection) {
+      liabilitiesSection.total = finalTotalRow.Summary.ColData[9]?.value || '';
+    }
+  }
+
+  return sections;
 };
 
-const processSection = (section) => {
-  //console.log("Processing section", section);
+const processMainSection = (section, netIncomeValue) => {
   if (!section?.Header?.ColData) {
-    //console.warn("No header data found in section.");
     return null;
   }
+
   const sectionName = section.Header.ColData[0]?.value || '';
-  const sectionTotal = section.Summary?.ColData[1]?.value || '';
- //console.log(`Section Name: ${sectionName}, Total: ${sectionTotal}`);
-  const accounts = section.Rows?.Row?.map(account => processAccount(account)) || [];
+  const sectionTotal = section.Summary?.ColData[9]?.value || '';
+  const accounts = [];
+
+  // Process accounts and subsections
+  if (section.Rows?.Row) {
+    section.Rows.Row.forEach(row => {
+      if (row.Header) {
+        const processedAccount = processAccount(row, netIncomeValue);
+        if (processedAccount) {
+          accounts.push(processedAccount);
+        }
+      }
+    });
+
+    // Add Net Income account to Equity section if we have the value
+    if (sectionName === "LIABILITIES AND EQUITY") {
+      const equityAccount = accounts.find(a => a.name === "Equity");
+      if (equityAccount && netIncomeValue) {
+        equityAccount.subAccounts.push({
+          name: "Net Income",
+          type: "account",
+          balance: netIncomeValue
+        });
+      }
+    }
+  }
+
   return {
     name: sectionName,
     total: sectionTotal,
     type: 'section',
-    accounts: accounts.filter(Boolean) // Remove null entries
+    accounts: accounts
   };
 };
 
 const processAccount = (account) => {
-  //console.log("Processing account", account);
   if (!account?.Header?.ColData) {
-    //console.warn("No header data found in account.");
     return null;
   }
+
   const header = account.Header.ColData[0] || {};
   const accountName = header.value || '';
   const accountId = header.id;
-  //console.log(`Account Name: ${accountName}, ID: ${accountId}`);
-  // Get the final balance from the last transaction if it exists
-  let finalBalance = '';
-  if (account.Rows?.Row?.length > 0) {
-    // Safety check - make sure we have a valid last transaction with ColData
-    const lastTransaction = account.Rows.Row[account.Rows.Row.length - 1];
-    if (lastTransaction?.ColData?.[9]) {
-      finalBalance = lastTransaction.ColData[9].value || '';
-    }
+
+  // Handle sub-accounts (like Original Cost under Truck)
+  const subAccounts = [];
+  if (account.Rows?.Row) {
+    account.Rows.Row.forEach(row => {
+      if (row.Header) {
+        const subAccount = processAccount(row);
+        if (subAccount) {
+          subAccounts.push(subAccount);
+        }
+      }
+    });
   }
-  //console.log(`Final Balance: ${finalBalance}`);
-  // Check if the account has sub-accounts
-  const hasSubAccounts = account.Rows?.Row?.some(row => row.Header);
-  if (hasSubAccounts) {
-    // Process sub-accounts
-    const subAccounts = account.Rows.Row
-      .map(subAccount => processAccount(subAccount))
-      .filter(Boolean);
-    // Calculate the total balance of sub-accounts
-    const subAccountsTotal = subAccounts.reduce((sum, subAccount) => sum + parseFloat(subAccount.balance || 0), 0);
-    // Compare sub-accounts total with the account's final balance
-    if (accountName === "Truck" || Math.abs(subAccountsTotal - parseFloat(finalBalance)) < 0.01) {
-      // If the account is "Truck" or the sub-accounts total matches the account's final balance,
-      // return the account with transactions from sub-accounts
-      return {
-        name: accountName,
-        id: accountId,
-        type: 'account',
-        balance: finalBalance,
-        transactions: subAccounts.flatMap(subAccount => subAccount.transactions)
-      };
-    } else {
-      // If the sub-accounts total doesn't match the account's final balance,
-      // return the account with sub-accounts
-      return {
-        name: accountName,
-        id: accountId,
-        type: 'accountWithSubs',
-        balance: finalBalance,
-        subAccounts
-      };
-    }
-  }
-  // Process transactions
+
+  // Get the final balance from the last transaction
   const transactions = account.Rows?.Row
     ?.filter(row => row.type === 'Data')
-    .map(transaction => processTransaction(transaction)) || [];
+    .map(processTransaction) || [];
+
+  let finalBalance = '';
+  if (transactions.length > 0) {
+    finalBalance = transactions[transactions.length - 1].balance;
+  } else if (account.Rows?.Row?.[0]?.ColData?.[9]) {
+    // For accounts like Truck that have their balance in the first row
+    finalBalance = account.Rows.Row[0].ColData[9].value;
+  }
+
+  // If this has sub-accounts, use them
+  if (subAccounts.length > 0) {
+    return {
+      name: accountName,
+      id: accountId,
+      type: 'accountWithSubs',
+      balance: finalBalance,
+      subAccounts,
+    };
+  }
+
   return {
     name: accountName,
     id: accountId,
     type: 'account',
     balance: finalBalance,
-    transactions
+    transactions: transactions.length > 0 ? transactions : undefined
   };
 };
 
 const processTransaction = (transaction) => {
-  //console.log("Processing transaction", transaction);
   if (!transaction?.ColData) {
-    //console.warn("No column data found in transaction.");
     return null;
   }
+
   const cols = transaction.ColData;
-  //console.log("Transaction columns", cols);
   return {
     date: cols[0]?.value || '',
     transactionType: cols[1]?.value || '',
@@ -115,6 +155,4 @@ const processTransaction = (transaction) => {
   };
 };
 
-export {
-  processBalanceSheetDetail
-};
+export { processBalanceSheetDetail };

@@ -29,7 +29,7 @@ const BalanceSheet = ({ data }) => {
         {section.total && (
           <BalanceSheetRow
             name={`Total ${section.name || ""}`}
-            balance={section.total}
+            balance={section.total} // Use the pre-calculated total
             type="total"
             indentLevel={indentLevel}
           />
@@ -52,7 +52,7 @@ const BalanceSheet = ({ data }) => {
           type="account"
           indentLevel={indentLevel}
           id={account.id}
-          transactions={account.transactions || []} // Pass transactions directly
+          transactions={account.transactions || []}
         />
         {account.subAccounts?.map((subAccount) =>
           renderAccount(subAccount, indentLevel + 1)

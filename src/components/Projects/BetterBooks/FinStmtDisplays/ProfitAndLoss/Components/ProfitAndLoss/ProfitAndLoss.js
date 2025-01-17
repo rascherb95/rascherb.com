@@ -10,7 +10,7 @@ const ProfitAndLoss = ({ data }) => {
   const processedData = processPLDetailData(data);
   if (!processedData) return <div>No data available</div>;
 
-  const renderItems = (item, level) => {
+  const renderItems = (item, indentLevel) => {
     const rows = [];
 
     // If item has direct transactions, show it first
@@ -20,7 +20,7 @@ const ProfitAndLoss = ({ data }) => {
           key={`direct-${item.label}`}
           label={item.label}
           amount={item.directAmount}
-          level={level}
+          indentLevel={indentLevel}
           transactions={item.transactions}
           hasDirectTransactions={item.hasDirectTransactions}
         />
@@ -29,26 +29,9 @@ const ProfitAndLoss = ({ data }) => {
 
     // If item has subcategories
     if (item.items?.length > 0) {
-      /* UN-USED CODE FOR CATEGORY HEADERS, SAVING FOR LATER IF NEEDED
-
-      // Add category header if not already shown as direct amount
-      if (item.directAmount === 0) {
-        rows.push(
-          <ProfitLossRow
-            key={`header-${item.label}`}
-            label={item.label}
-            level={level}
-            isCategoryHeader={true}
-          />
-        );
-      }
-
-      */
-
-      // Process each subcategory
       item.items.forEach((subItem) => {
         // Render the subcategory and its items
-        rows.push(...renderItems(subItem, level + 1));
+        rows.push(...renderItems(subItem, indentLevel + 1));
       });
 
       // Add total for main category if needed
@@ -58,9 +41,9 @@ const ProfitAndLoss = ({ data }) => {
             key={`total-${item.label}`}
             label={item.label}
             amount={item.totalWithSubs}
-            level={level}
+            indentLevel={indentLevel}
             isTotal={true}
-            isMajorTotal={level === 0}
+            isMajorTotal={indentLevel === 0}
           />
         );
       }
@@ -78,14 +61,14 @@ const ProfitAndLoss = ({ data }) => {
             <ProfitLossRow
               label={section.label}
               amount={section.total}
-              level={0}
+              indentLevel={0}
               isCategoryHeader={true}
             />
             {section.items.map((item) => renderItems(item, 1))}
             <ProfitLossRow
               label={section.label}
               amount={section.total}
-              level={0}
+              indentLevel={0}
               isTotal={true}
               isMajorTotal={true}
             />
@@ -95,7 +78,7 @@ const ProfitAndLoss = ({ data }) => {
           <ProfitLossRow
             label={processedData.netIncome.label}
             amount={processedData.netIncome.amount}
-            level={0}
+            indentLevel={0}
             isTotal={true}
             isMajorTotal={true}
           />

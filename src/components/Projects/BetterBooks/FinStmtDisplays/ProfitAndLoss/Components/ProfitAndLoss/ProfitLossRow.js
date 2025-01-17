@@ -5,7 +5,7 @@ import "./ProfitAndLoss.css";
 const ProfitLossRow = ({
   label = "",
   amount = null,
-  level = 0,
+  indentLevel = 0,
   isTotal = false,
   isMajorTotal = false,
   transactions = [],
@@ -25,7 +25,7 @@ const ProfitLossRow = ({
 
   const rowClasses = [
     "pl-row",
-    `pl-indent-${level}`,
+    `pl-indent-${indentLevel}`,
     isTotal && "pl-subtotal",
     isMajorTotal && "pl-major-total",
     isCategoryHeader && "pl-category-header",
